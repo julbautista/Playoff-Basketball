@@ -3,7 +3,7 @@ data{
   real<lower = 0, upper = 1> regwins[N];
   real<lower = 0, upper = 1> playoffwins[N];
   real<lower = 0, upper = 1> latewins[N];
-  int<lower = 0> seed[8];
+  int<lower = 0> seed[N];
 }
 
 parameters{

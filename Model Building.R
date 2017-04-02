@@ -1,7 +1,7 @@
 #source("C:/Users/Julian Bautista/Documents/Portfolio/Playoff Basketball/Data Scraping.R")
 source("https://raw.githubusercontent.com/julbautista/Startup/master/julian_startup.R")
 setwd("C:/Users/Julian Bautista/Documents/Portfolio/Playoff Basketball")
-final <- read.csv("Playoff Data.csv")
+final <- read.csv("https://raw.githubusercontent.com/julbautista/Playoff-Basketball/master/Playoff%20Data.csv")
 
 #scatterplot
 a <- ggplot(final, aes(season, playoffwins)) + geom_point() + geom_smooth() + ggtitle("Regular Season Win % on Raw Playoff Wins")
