@@ -1,4 +1,7 @@
-source("C:/Users/Julian Bautista/Documents/Portfolio/Playoff Basketball/Data Scraping.R")
+#source("C:/Users/Julian Bautista/Documents/Portfolio/Playoff Basketball/Data Scraping.R")
+source("https://raw.githubusercontent.com/julbautista/Startup/master/julian_startup.R")
+setwd("C:/Users/Julian Bautista/Documents/Portfolio/Playoff Basketball")
+final <- read.csv("Playoff Data.csv")
 
 #scatterplot
 a <- ggplot(final, aes(season, playoffwins)) + geom_point() + geom_smooth() + ggtitle("Regular Season Win % on Raw Playoff Wins")
@@ -23,4 +26,4 @@ fit1 <- stan("simple model.stan",
 beep()
 
 rstan::extract(fit1)
-write.csv(final, "playoff data.csv")
+#write.csv(final, "playoff data.csv", row.names = F)
