@@ -9,8 +9,8 @@ data{
 parameters{
   real beta_reg[8];
   real beta_late[8];
-  real sigma_reg;
-  real sigma_late;
+  real <lower = 0> sigma_reg;
+  real <lower = 0> sigma_late;
   real alpha_late[8];
   real alpha_reg[8];
   // real sigma;

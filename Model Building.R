@@ -16,12 +16,12 @@ multiplot(a,b,c,d, cols = 2)
 regwins <- final$season
 playoffwins <- final$playoffpct
 latewins <- final$allstar
-seed <- final$seed
 N <- length(regwins)
+seed <- array(final$seed, dim = c(N, 1))
 
 stanc("simple model.stan")$status
 fit1 <- stan("simple model.stan",
-             data = c("N","seed", "regwins","playoffwins","latewins"),
+             data = list("N","seed", "regwins","playoffwins","latewins"),
              iter = 1000, chains = 3)
 beep()
 
