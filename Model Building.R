@@ -14,16 +14,132 @@ multiplot(a,b,c,d, cols = 2)
 
 #running stan model
 regwins <- final$season
-playoffwins <- final$playoffpct
+playoffwins <- final$playoffwins
 latewins <- final$allstar
 N <- length(regwins)
-seed <- array(final$seed, dim = c(N, 1))
+seed1 <- final$seed
+
 
 stanc("simple model.stan")$status
 fit1 <- stan("simple model.stan",
-             data = list("N","seed", "regwins","playoffwins","latewins"),
+             data = list("N","seed1", "regwins","playoffwins","latewins"),
              iter = 1000, chains = 3)
 beep()
+fit_sum1 <- rstan::extract(fit1)
+
+
+#
+#Plots
+par(mfcol = c(1,2),
+    mar = c(4,3.9,1.5,3.5))
+plot(colMeans(fit_sum$y_pred_reg),
+     playoffwins,
+     pch = 16,
+     cex = 0.7,
+     xlab = "Predicted",
+     ylab = "Regular wins",
+     cex.lab = 0.8,
+     xlim = c(0,16),
+     ylim = c(0,16))
+abline(0,1, lty = 2, col = "gray")
+plot(colMeans(fit_sum$y_pred_late),
+     playoffwins,
+     pch = 16,
+     cex = 0.7,
+     xlab = "Predicted",
+     ylab = "Late wins",
+     cex.lab = 0.8,
+     xlim = c(0,16),
+     ylim = c(0,16))
+abline(0,1, lty = 2, col = "gray")
+
+par(mfcol = c(1,2),
+    mar = c(4,3.9,1.5,3.5))
+plot(regwins,
+     playoffwins,
+     pch = 16,
+     cex = 0.7,
+     ylab = "Playoff Wins",
+     xlab = "Regular win %",
+     cex.lab = 0.8,
+     xlim = c(0,1),
+     ylim = c(0,16))
+#abline(0,1, lty = 2, col = "gray")
+points(regwins,
+       colMeans(fit_sum$y_pred_reg), pch = 16, col = "grey")
+plot(latewins,
+     playoffwins,
+     pch = 16,
+     cex = 0.7,
+     ylab = "Playoff Wins",
+     xlab = "Late Win %",
+     cex.lab = 0.8,
+     xlim = c(0,1),
+     ylim = c(0,16))
+points(latewins,
+       colMeans(fit_sum$y_pred_late), pch = 16, col = "grey")
+#abline(0,1, lty = 2, col = "gray")
+
+stanc("binomial.stan")$status
+fit2 <- stan("binomial.stan",
+             data = list("N","seed1", "regwins","playoffwins","latewins"),
+             iter = 1000, chains = 3)
+beep()
+fit_sum2 <- rstan::extract(fit2)
+
+print(fit2, digits = 3)
+
+#fit2
+par(mfcol = c(1,2),
+    mar = c(4,3.9,1.5,3.5))
+plot(colMeans(fit_sum2$y_pred_reg),
+     playoffwins,
+     pch = 16,
+     cex = 0.7,
+     xlab = "Predicted",
+     ylab = "Regular wins",
+     cex.lab = 0.8,
+     xlim = c(0,16),
+     ylim = c(0,16))
+abline(0,1, lty = 2, col = "gray")
+plot(colMeans(fit_sum2$y_pred_late),
+     playoffwins,
+     pch = 16,
+     cex = 0.7,
+     xlab = "Predicted",
+     ylab = "Late wins",
+     cex.lab = 0.8,
+     xlim = c(0,16),
+     ylim = c(0,16))
+abline(0,1, lty = 2, col = "gray")
+
+par(mfcol = c(1,2),
+    mar = c(4,3.9,1.5,3.5))
+plot(regwins,
+     playoffwins,
+     pch = 16,
+     cex = 0.7,
+     ylab = "Playoff Wins",
+     xlab = "Regular win %",
+     cex.lab = 0.8,
+     xlim = c(0,1),
+     ylim = c(0,16))
+#abline(0,1, lty = 2, col = "gray")
+points(regwins,
+       colMeans(fit_sum2$y_pred_reg), pch = 16, col = "grey")
+plot(latewins,
+     playoffwins,
+     pch = 16,
+     cex = 0.7,
+     ylab = "Playoff Wins",
+     xlab = "Late Win %",
+     cex.lab = 0.8,
+     xlim = c(0,1),
+     ylim = c(0,16))
+points(latewins,
+       colMeans(fit_sum2$y_pred_late), pch = 16, col = "grey")
+#abline(0,1, lty = 2, col = "gray")
+
 
 rstan::extract(fit1)
 #write.csv(final, "playoff data.csv", row.names = F)
