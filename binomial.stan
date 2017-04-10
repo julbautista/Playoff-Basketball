@@ -24,7 +24,7 @@ transformed parameters {
   real theta_late[N];
   for(i in 1:N){
     theta_late[i] = inv_logit(alpha_late[seed1[i]] + beta_late[seed1[i]]*latewins[i]);
-    theta_reg[i] = inv_logit(alpha_reg[seed1[i]] + beta_reg[seed1[i]]*regwins[N]);
+    theta_reg[i] = inv_logit(alpha_reg[seed1[i]] + beta_reg[seed1[i]]*regwins[i]);
   }  
 }
 

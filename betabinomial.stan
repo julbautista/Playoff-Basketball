@@ -20,15 +20,15 @@ parameters {
 }
 
 transformed parameters {
-  real A_reg[N];
-  real A_late[N];
-  real B_reg[N];
-  real B_late[N];
+  real<lower = 0> A_reg[N];
+  real<lower = 0> A_late[N];
+  real<lower = 0> B_reg[N];
+  real<lower = 0> B_late[N];
   for(i in 1:N){
-    A_late[i] = inv_logit(alpha_late[seed1[i]] + beta_late[seed1[i]]*latewins[i]);
-    A_reg[i] = inv_logit(alpha_reg[seed1[i]] + beta_reg[seed1[i]]*regwins[N]);
-    B_late[i] = inv_logit(alpha_late[seed1[i]] + beta_late[seed1[i]]*latewins[i]);
-    B_reg[i] = inv_logit(alpha_reg[seed1[i]] + beta_reg[seed1[i]]*regwins[N]);
+    A_late[i] = alpha_late[seed1[i]] + beta_late[seed1[i]]*latewins[i];
+    A_reg[i] = alpha_reg[seed1[i]] + beta_reg[seed1[i]]*regwins[i];
+    B_late[i] = alpha_late[seed1[i]] + beta_late[seed1[i]]*latewins[i];
+    B_reg[i] = alpha_reg[seed1[i]] + beta_reg[seed1[i]]*regwins[i];
   }  
 }
 
