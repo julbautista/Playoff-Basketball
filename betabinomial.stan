@@ -20,10 +20,10 @@ parameters {
 }
 
 transformed parameters {
-  real<lower = 0> A_reg[N];
-  real<lower = 0> A_late[N];
-  real<lower = 0> B_reg[N];
-  real<lower = 0> B_late[N];
+  real A_reg[N];
+  real A_late[N];
+  real B_reg[N];
+  real B_late[N];
   for(i in 1:N){
     A_late[i] = alpha_late[seed1[i]] + beta_late[seed1[i]]*latewins[i];
     A_reg[i] = alpha_reg[seed1[i]] + beta_reg[seed1[i]]*regwins[i];
@@ -40,10 +40,10 @@ model {
   }
   beta_late ~ normal(mu_late, sigma_late);
   beta_reg ~ normal(mu_reg, sigma_reg);
-  alpha_late ~ normal(0, 3);
-  alpha_reg ~ normal(0, 3);
-  mu_late ~ normal(0, 10);
-  mu_reg ~ normal(0, 10);
+  alpha_late ~ normal(10, 1.5);
+  alpha_reg ~ normal(10, 1.5);
+  mu_late ~ normal(40, 10);
+  mu_reg ~ normal(40, 10);
 }
 
 generated quantities{

@@ -88,7 +88,8 @@ beep()
 fit_sum2 <- rstan::extract(fit2)
 
 print(fit2, digits = 3)
-ggplot()
+ggplot(NULL, aes(colMeans(fit_sum2$y_pred_reg), playoffwins)) + geom_point() + geom_abline(slope = 1, intercept = 0) + lims(x = c(0,16), y = c(0,16))
+
 #fit2
 par(mfcol = c(1,2),
     mar = c(4,3.9,1.5,3.5))
@@ -106,42 +107,47 @@ plot(colMeans(fit_sum2$y_pred_late),
      playoffwins,
      pch = 16,
      cex = 0.7,
-     xlab = "Predicted",
-     ylab = "Late wins",
+     xlab = "Predicted Seed",
+     ylab = "Late wins Seed",
      cex.lab = 0.8,
      xlim = c(0,16),
      ylim = c(0,16))
 abline(0,1, lty = 2, col = "gray")
 
-par(mfcol = c(1,2),
-    mar = c(4,3.9,1.5,3.5))
-plot(regwins,
-     playoffwins,
-     pch = 16,
-     cex = 0.7,
-     ylab = "Playoff Wins",
-     xlab = "Regular win %",
-     cex.lab = 0.8,
-     xlim = c(0,1),
-     ylim = c(0,16))
-#abline(0,1, lty = 2, col = "gray")
-points(regwins,
-       colMeans(fit_sum2$y_pred_reg), pch = 16, col = "grey")
-plot(latewins,
-     playoffwins,
-     pch = 16,
-     cex = 0.7,
-     ylab = "Playoff Wins",
-     xlab = "Late Win %",
-     cex.lab = 0.8,
-     xlim = c(0,1),
-     ylim = c(0,16))
-points(latewins,
-       colMeans(fit_sum2$y_pred_late), pch = 16, col = "grey")
-#abline(0,1, lty = 2, col = "gray")
 
-stanc("betabinomial.stan")$status
-fit3 <- stan("betabinomial.stan",
+
+par(mfrow = c(4,2), #mar = c(,1,1,1))
+    mar = c(4,4,1,1))
+for(i in 1:8){
+ranklevel <- final$seed == i
+plot(regwins[ranklevel],
+     playoffwins[ranklevel],
+     pch = 16,
+     cex = 0.7,
+     ylab = "Playoff Wins Seed " %+% i,
+     xlab = "Regular win % Seed " %+% i,
+     cex.lab = 0.8,
+     xlim = c(0,1),
+     ylim = c(0,16))
+#abline(0,1, lty = 2, col = "gray")
+points(regwins[ranklevel],
+       colMeans(fit_sum2$y_pred_reg)[ranklevel], pch = 16, col = "grey")
+plot(latewins[ranklevel],
+     playoffwins[ranklevel],
+     pch = 16,
+     cex = 0.7,
+     ylab = "Playoff Wins Seed " %+% i,
+     xlab = "Late Win % Seed " %+% i,
+     cex.lab = 0.8,
+     xlim = c(0,1),
+     ylim = c(0,16))
+points(latewins[ranklevel],
+       colMeans(fit_sum2$y_pred_late)[ranklevel], pch = 16, col = "grey")
+#abline(0,1, lty = 2, col = "gray")
+}
+
+stanc("twoparam.stan")$status
+fit3 <- stan("twoparam.stan",
              data = list("N","seed1", "regwins","playoffwins","latewins"),
              iter = 1000, chains = 3)
 beep()
@@ -200,5 +206,4 @@ points(latewins,
        colMeans(fit_sum3$y_pred_late), pch = 16, col = "grey")
 #abline(0,1, lty = 2, col = "gray")
 
-rstan::extract(fit1)
 #write.csv(final, "playoff data.csv", row.names = F)
