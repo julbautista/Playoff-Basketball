@@ -10,10 +10,8 @@ data{
 parameters{
   real beta_reg[8];
   real beta_late[8];
-  real <lower = 0> sigma_reg;
-  real <lower = 0> sigma_late;
-  real alpha_late[8];
-  real alpha_reg[8];
+  real <lower = 0> sigma;
+  real alpha[8];
   real mu_late;
   real mu_reg;
   // real sigma;
@@ -25,23 +23,19 @@ model{
   // target += normal_lpdf(playoffwins | alpha_reg[seed[N]] + beta_reg[seed[N]]*regwins[N], sigma_reg);
   
   for(i in 1:N){
-    playoffwins[i] ~ normal(alpha_late[seed1[i]] + beta_late[seed1[i]]*latewins[i], sigma_late);
-    playoffwins[i] ~ normal(alpha_reg[seed1[i]] + beta_reg[seed1[i]]*regwins[i], sigma_reg);
+    playoffwins[i] ~ normal(alpha[seed1[i]] + beta_late[seed1[i]]*latewins[i] + beta_reg[seed1[i]]*regwins[i], sigma);
   }
   
-  beta_late ~ normal(mu_late, sigma_late);
-  beta_reg ~ normal(mu_reg, sigma_reg);
-  alpha_late ~ normal(0, 3);
-  alpha_reg ~ normal(0, 3);
+  beta_late ~ normal(mu_late, 8);
+  beta_reg ~ normal(mu_reg, 8);
+  alpha ~ normal(0, 3);
   mu_late ~ normal(0, 10);
   mu_reg ~ normal(0, 10);  
 }
 
 generated quantities{
-  real y_pred_reg[N];
-  real y_pred_late[N];
+  real y_pred[N];
   for(i in 1:N){
-    y_pred_reg[i] = normal_rng(alpha_late[seed1[i]] + beta_late[seed1[i]]*latewins[i], sigma_late);
-    y_pred_late[i] = normal_rng(alpha_reg[seed1[i]] + beta_reg[seed1[i]]*regwins[N], sigma_reg);
-  }
+    y_pred[i] = normal_rng(alpha[seed1[i]] + beta_late[seed1[i]]*latewins[i] + beta_reg[seed1[i]]*regwins[i], sigma);
+    }
 }
