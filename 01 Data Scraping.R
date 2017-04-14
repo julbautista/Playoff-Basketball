@@ -221,3 +221,9 @@ playoffpct <- playoffs$wintotal/(playoffs$wintotal + playoffs$losstotal)
 seed <- as.numeric(substring(win_loss$teams, regexpr("([0-9])", win_loss$teams), regexpr("([0-9])", win_loss$teams)))
 final <- data_frame(teams = playoffs$teams, seed, year = playoffs$year, playoffwins = playoffs$wintotal, season = win_loss$winpct, allstar = post_break$winpct, playoffpct)
 rm(playoffs,post_break,win_loss,i, playoffpct)
+
+nickname <- plyr::mapvalues(final$teams, from = levels(final$teams), to = c("Hawks", "Celtics", "Nets", "Charlotte", "Charlotte", "Bulls", "Cavs", "Mavs", "Nugs", "Pistons", "Warriors", "Rockets", "Pacers", "Clips", "Lakers", "Griz", "Heat", "Bucks", "TWolves", "Nets", "NOrleans", "NOrleans", "Knicks", "Thunder", "Magic", "76ers", "Suns", "Blazers", "Kings", "Spurs", "Sonics", "Raptors", "Jazz", "Wiz"))
+
+final <- cbind(final, nickname)
+
+#write.csv(final, "playoff data.csv", row.names = F)

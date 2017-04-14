@@ -46,7 +46,7 @@ ggplot(df_pred_bin, aes(year, WinsPredReg - playoffwins )) +
   #geom_errorbar(ymin = df_pred_bin$LowBoundReg - df_pred_bin$playoffwins, ymax = df_pred_bin$UpBoundReg - df_pred_bin$playoffwins) + 
   facet_grid(.~seed)
 
-ggplot(df_pred_bin, aes(year, WinsPredReg - playoffwins )) + 
+ggplot(df_pred_bin, aes(year, WinsPredLate - playoffwins )) + 
   geom_hline(yintercept = 0, linetype = "dashed") + 
   geom_point(colour = jbpal$blue)  + 
   theme(panel.grid.major = element_blank()) + 
@@ -54,3 +54,152 @@ ggplot(df_pred_bin, aes(year, WinsPredReg - playoffwins )) +
   ylab("Difference Between Prediction and Reality") + xlab("Years") + 
   #geom_errorbar(ymin = df_pred_bin$LowBoundLate - df_pred_bin$playoffwins, ymax = df_pred_bin$UpBoundLate - df_pred_bin$playoffwins) + 
   facet_grid(.~seed)
+
+
+
+#Finding Outliers Full Season------------------
+full <- ggplot(df_pred_bin, aes(year, WinsPredReg - playoffwins )) + 
+  geom_hline(yintercept = 0, linetype = "dashed") + 
+  geom_point(colour = jbpal$blue)  + 
+  theme(panel.grid.major = element_blank()) + 
+  ggtitle("Full Season Binomial Prediction Accuracy Plots, per Seed") + 
+  ylab("Difference Between Prediction and Reality") + xlab("Years") + 
+  geom_label_repel(data = subset(df_pred_bin, WinsPredReg - playoffwins > 5| WinsPredReg - playoffwins < -5), aes(label = year %+% " " %+% nickname), size = 4, alpha = 1, box.padding = unit(0.65, "lines"), label.padding = unit(0.10, "lines"), force = 6) +
+  geom_point(data = subset(df_pred_bin, WinsPredReg - playoffwins > 5| WinsPredReg - playoffwins < -5)) +
+  #geom_errorbar(ymin = df_pred_bin$LowBoundLate - df_pred_bin$playoffwins, ymax = df_pred_bin$UpBoundLate - df_pred_bin$playoffwins) + 
+  facet_grid(.~seed)
+
+# ggplot(df_pred_bin[df_pred_bin$seed == 1 | 
+#                      df_pred_bin$seed == 2 |
+#                      df_pred_bin$seed == 3 |
+#                      df_pred_bin$seed == 4 ,], 
+#        aes(year, WinsPredReg - playoffwins )) + 
+#   geom_hline(yintercept = 0, linetype = "dashed") + 
+#   geom_point(colour = jbpal$blue)  + 
+#   theme(panel.grid.major = element_blank()) + 
+#   ggtitle("1-4 Seed Full Season Prediction Accuracy") + 
+#   ylab("Difference Between Prediction and Reality") + xlab("Years") + 
+#   geom_label_repel(data = subset(df_pred_bin[df_pred_bin$seed == 1 |
+#                                              df_pred_bin$seed == 2 |
+#                                              df_pred_bin$seed == 3 |
+#                                              df_pred_bin$seed == 4 ,], 
+#                                  WinsPredReg - playoffwins > 5| 
+#                                  WinsPredReg - playoffwins < -5), 
+#                    aes(label = year %+% " " %+% nickname), 
+#                    size = 4, alpha = 1, box.padding = unit(0.65, "lines"),
+#                    label.padding = unit(0.10, "lines"), force = 6) +
+#   geom_point(data = subset(df_pred_bin[df_pred_bin$seed == 1 |
+#                                          df_pred_bin$seed == 2 |
+#                                          df_pred_bin$seed == 3 |
+#                                          df_pred_bin$seed == 4 ,], 
+#                            WinsPredReg - playoffwins > 5| 
+#                              WinsPredReg - playoffwins < -5)) +
+#   #scale_x_continuous(breaks = c(2003:2016)) +
+#   facet_grid(.~seed)
+#   #geom_errorbar(ymin = df_pred_bin$LowBoundLate - df_pred_bin$playoffwins, ymax = df_pred_bin$UpBoundLate - df_pred_bin$playoffwins) + 
+#   
+# ggplot(df_pred_bin[df_pred_bin$seed == 5 | 
+#                      df_pred_bin$seed == 6 |
+#                      df_pred_bin$seed == 7 |
+#                      df_pred_bin$seed == 8 ,], 
+#        aes(year, WinsPredReg - playoffwins )) + 
+#   geom_hline(yintercept = 0, linetype = "dashed") + 
+#   geom_point(colour = jbpal$blue)  + 
+#   theme(panel.grid.major = element_blank()) + 
+#   ggtitle("Binomial 5-8 Seed Full Season Prediction Accuracy") + 
+#   ylab("Difference Between Prediction and Reality") + xlab("Years") + 
+#   geom_label_repel(data = subset(df_pred_bin[df_pred_bin$seed == 5 |
+#                                                df_pred_bin$seed == 6 |
+#                                                df_pred_bin$seed == 7 |
+#                                                df_pred_bin$seed == 8 ,], 
+#                                  WinsPredReg - playoffwins > 5| 
+#                                    WinsPredReg - playoffwins < -5), 
+#                    aes(label = year %+% " " %+% nickname), 
+#                    size = 4, alpha = 1, box.padding = unit(0.65, "lines"),
+#                    label.padding = unit(0.10, "lines"), force = 6) +
+#   geom_point(data = subset(df_pred_bin[df_pred_bin$seed == 5 |
+#                                          df_pred_bin$seed == 6 |
+#                                          df_pred_bin$seed == 7 |
+#                                          df_pred_bin$seed == 8 ,], 
+#                            WinsPredReg - playoffwins > 5| 
+#                              WinsPredReg - playoffwins < -5)) +
+#   #scale_x_continuous(breaks = c(2003:2016)) +
+#   facet_grid(.~seed)
+# #geom_errorbar(ymin = df_pred_bin$LowBoundLate - df_pred_bin$playoffwins, ymax = df_pred_bin$UpBoundLate - df_pred_bin$playoffwins) + 
+
+
+
+
+#Finding Outliers Late Season------------------
+late <- ggplot(df_pred_bin, aes(year, WinsPredLate - playoffwins )) + 
+  geom_hline(yintercept = 0, linetype = "dashed") + 
+  geom_point(colour = jbpal$blue)  + 
+  theme(panel.grid.major = element_blank()) + 
+  ggtitle("Late Season Binomial Prediction Accuracy Plots, per Seed") + 
+  ylab("Difference Between Prediction and Reality") + xlab("Years") + 
+  geom_label_repel(data = subset(df_pred_bin, WinsPredLate - playoffwins > 5| WinsPredLate - playoffwins < -5), aes(label = year %+% " " %+% nickname), size = 4, alpha = 1, box.padding = unit(0.65, "lines"), label.padding = unit(0.10, "lines"), force = 6) +
+  geom_point(data = subset(df_pred_bin, WinsPredLate - playoffwins > 5| WinsPredLate - playoffwins < -5)) +
+  #geom_errorbar(ymin = df_pred_bin$LowBoundLate - df_pred_bin$playoffwins, ymax = df_pred_bin$UpBoundLate - df_pred_bin$playoffwins) + 
+  facet_grid(.~seed)
+
+# ggplot(df_pred_bin[df_pred_bin$seed == 1 | 
+#                      df_pred_bin$seed == 2 |
+#                      df_pred_bin$seed == 3 |
+#                      df_pred_bin$seed == 4 ,], 
+#        aes(year, WinsPredLate - playoffwins )) + 
+#   geom_hline(yintercept = 0, linetype = "dashed") + 
+#   geom_point(colour = jbpal$blue)  + 
+#   theme(panel.grid.major = element_blank()) + 
+#   ggtitle("1-4 Seed Late Season Prediction Accuracy") + 
+#   ylab("Difference Between Prediction and Reality") + xlab("Years") + 
+#   geom_label_repel(data = subset(df_pred_bin[df_pred_bin$seed == 1 |
+#                                                df_pred_bin$seed == 2 |
+#                                                df_pred_bin$seed == 3 |
+#                                                df_pred_bin$seed == 4 ,], 
+#                                  WinsPredLate - playoffwins > 5| 
+#                                    WinsPredLate - playoffwins < -5), 
+#                    aes(label = year %+% " " %+% nickname), 
+#                    size = 4, alpha = 1, box.padding = unit(0.65, "lines"),
+#                    label.padding = unit(0.10, "lines"), force = 6) +
+#   geom_point(data = subset(df_pred_bin[df_pred_bin$seed == 1 |
+#                                          df_pred_bin$seed == 2 |
+#                                          df_pred_bin$seed == 3 |
+#                                          df_pred_bin$seed == 4 ,], 
+#                            WinsPredLate - playoffwins > 5| 
+#                              WinsPredLate - playoffwins < -5)) +
+#   #scale_x_continuous(breaks = c(2003:2016)) +
+#   facet_grid(.~seed)
+# #geom_errorbar(ymin = df_pred_bin$LowBoundLate - df_pred_bin$playoffwins, ymax = df_pred_bin$UpBoundLate - df_pred_bin$playoffwins) + 
+# 
+# ggplot(df_pred_bin[df_pred_bin$seed == 5 | 
+#                      df_pred_bin$seed == 6 |
+#                      df_pred_bin$seed == 7 |
+#                      df_pred_bin$seed == 8 ,], 
+#        aes(year, WinsPredLate - playoffwins )) + 
+#   geom_hline(yintercept = 0, linetype = "dashed") + 
+#   geom_point(colour = jbpal$blue)  + 
+#   theme(panel.grid.major = element_blank()) + 
+#   ggtitle("Binomial 5-8 Seed Late Season Prediction Accuracy") + 
+#   ylab("Difference Between Prediction and Reality") + xlab("Years") + 
+#   geom_label_repel(data = subset(df_pred_bin[df_pred_bin$seed == 5 |
+#                                                df_pred_bin$seed == 6 |
+#                                                df_pred_bin$seed == 7 |
+#                                                df_pred_bin$seed == 8 ,], 
+#                                  WinsPredLate - playoffwins > 5| 
+#                                    WinsPredLate - playoffwins < -5), 
+#                    aes(label = year %+% " " %+% nickname), 
+#                    size = 4, alpha = 1, box.padding = unit(0.65, "lines"),
+#                    label.padding = unit(0.10, "lines"), force = 6) +
+#   geom_point(data = subset(df_pred_bin[df_pred_bin$seed == 5 |
+#                                          df_pred_bin$seed == 6 |
+#                                          df_pred_bin$seed == 7 |
+#                                          df_pred_bin$seed == 8 ,], 
+#                            WinsPredLate - playoffwins > 5| 
+#                              WinsPredLate - playoffwins < -5)) +
+#   #scale_x_continuous(breaks = c(2003:2016)) +
+#   facet_grid(.~seed)
+# #geom_errorbar(ymin = df_pred_bin$LowBoundLate - df_pred_bin$playoffwins, ymax = df_pred_bin$UpBoundLate - df_pred_bin$playoffwins) + 
+
+late
+full
+twop

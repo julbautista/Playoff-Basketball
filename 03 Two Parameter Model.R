@@ -43,4 +43,14 @@ ggplot(df_pred_two, aes(year, WinsPred - playoffwins )) +
   #geom_errorbar(ymin = df_pred_two$LowBound - df_pred_two$playoffwins, ymax = df_pred_two$UpBound - df_pred_two$playoffwins) + 
   facet_grid(.~seed) 
 
-
+#find outliers----------------
+twop <- ggplot(df_pred_two, aes(year, WinsPred - playoffwins )) + 
+  geom_hline(yintercept = 0, linetype = "dashed") + 
+  geom_point(colour = jbpal$blue)  + 
+  theme(panel.grid.major = element_blank()) + 
+  ggtitle("Two Parameter Prediction Accuracy Plots, per Seed") + 
+  ylab("Difference Between Prediction and Reality") + xlab("Years") + 
+  geom_label_repel(data = subset(df_pred_two, WinsPred - playoffwins > 5| WinsPred - playoffwins < -5), aes(label = year %+% " " %+% nickname), size = 4, alpha = 1, box.padding = unit(0.65, "lines"), label.padding = unit(0.10, "lines"), force = 6) +
+  geom_point(data = subset(df_pred_two, WinsPred - playoffwins > 5| WinsPred - playoffwins < -5)) +
+  #geom_errorbar(ymin = df_pred_bin$LowBoundLate - df_pred_bin$playoffwins, ymax = df_pred_bin$UpBoundLate - df_pred_bin$playoffwins) + 
+  facet_grid(.~seed)
