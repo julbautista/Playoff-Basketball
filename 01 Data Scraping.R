@@ -224,6 +224,10 @@ rm(playoffs,post_break,win_loss,i, playoffpct)
 
 nickname <- plyr::mapvalues(final$teams, from = levels(final$teams), to = c("Hawks", "Celtics", "Nets", "Charlotte", "Charlotte", "Bulls", "Cavs", "Mavs", "Nugs", "Pistons", "Warriors", "Rockets", "Pacers", "Clips", "Lakers", "Griz", "Heat", "Bucks", "TWolves", "Nets", "NOrleans", "NOrleans", "Knicks", "Thunder", "Magic", "76ers", "Suns", "Blazers", "Kings", "Spurs", "Sonics", "Raptors", "Jazz", "Wiz"))
 
-final <- cbind(final, nickname)
+conference <- plyr::mapvalues(final$teams, from = levels(final$teams), to = c("East", "East", "East", "East", "East", "East", "East", "West", "West", "East", "West", "West",  "East", "West", "West", "West", "East",  "East", "West", "East", "West", "West", "East", "West", "East", "East", "West", "West", "West", "West", "West", "East", "West", "East"))
+
+final <- cbind(final, nickname, conference)
+final$conference[9] <- "East"
+final$seed[11] <- 4
 
 #write.csv(final, "playoff data.csv", row.names = F)

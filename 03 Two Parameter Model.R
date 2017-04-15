@@ -34,17 +34,38 @@ ggplot(betas_two, aes(Reg, Late, label = Seed)) +
   ylab("Late Season Wins") + xlab("Full Regular Season Wins")
 
 #plot prediction accuracy----------------------
-ggplot(df_pred_two, aes(year, WinsPred - playoffwins )) + 
+ggplot(df_pred_two, aes(year, WinsPred - playoffwins, ymin = LowBound - playoffwins, ymax = UpBound - playoffwins)) + 
   geom_hline(yintercept = 0, linetype = "dashed") + 
   geom_point(colour = jbpal$blue)  + 
   theme(panel.grid.major = element_blank()) + 
-  ggtitle("Two Parameter Prediction Accuracy Plots, per Seed") + 
+  ggtitle("Two Parameter Prediction Balance Plots, per Seed") + 
   ylab("Difference Between Prediction and Reality") + xlab("Years") + 
-  #geom_errorbar(ymin = df_pred_two$LowBound - df_pred_two$playoffwins, ymax = df_pred_two$UpBound - df_pred_two$playoffwins) + 
-  facet_grid(.~seed) 
+  geom_errorbar() + 
+  facet_grid(conference~seed) 
+
+ggplot(df_pred_two, aes(year, WinsPred, ymin = LowBound, ymax = UpBound)) + 
+  geom_point(colour = jbpal$blue)  + 
+  theme(panel.grid.major = element_blank()) + 
+  ggtitle("Two Parameter Accuracy Plots, per Seed", subtitle = "Green: Actual\nBlue: Predicted") + 
+  ylab("Playoff Wins") + xlab("Years") + 
+  geom_point(aes(year, playoffwins)) +
+  geom_errorbar() + 
+  facet_grid(conference~seed)
 
 #find outliers----------------
-twop <- ggplot(df_pred_two, aes(year, WinsPred - playoffwins )) + 
+ggplot(df_pred_two, aes(year, WinsPred - playoffwins, ymin = LowBound - playoffwins, ymax = UpBound - playoffwins)) + 
+  geom_hline(yintercept = 0, linetype = "dashed") + 
+  geom_point(colour = jbpal$blue)  + 
+  theme(panel.grid.major = element_blank()) + 
+  ggtitle("Two Parameter Prediction Balance Plots, per Seed") + 
+  ylab("Difference Between Prediction and Reality") + xlab("Years") + 
+  geom_errorbar() + 
+  geom_label_repel(data = subset(df_pred_two, WinsPred - playoffwins > 5| WinsPred - playoffwins < -5), aes(label = year %+% " " %+% nickname), size = 4, alpha = 1, box.padding = unit(0.85, "lines"), label.padding = unit(0.10, "lines"), force = 40) +
+  geom_point(data = subset(df_pred_two, WinsPred - playoffwins > 5| WinsPred - playoffwins < -5)) +
+  facet_grid(conference~seed)
+
+
+ggplot(df_pred_two, aes(year, WinsPred - playoffwins )) + 
   geom_hline(yintercept = 0, linetype = "dashed") + 
   geom_point(colour = jbpal$blue)  + 
   theme(panel.grid.major = element_blank()) + 
